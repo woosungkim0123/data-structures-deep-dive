@@ -36,6 +36,26 @@ int main()
 		pTmp = pTmp->next;
 	}
 
+	printf("===============experiment===============\n");
+
+	list[1].next = &list[3];
+
+	for (int i = 0; i < 5; i++)
+	{
+		printf("list[%d]: %d\n", i, list[i].nData);
+	}
+
+	NODE* pTmpExp = &list[0];
+
+	while (pTmpExp != NULL)
+	{
+		printf("%p: %d\n", pTmpExp, pTmpExp->nData);
+		pTmpExp = pTmpExp->next;
+	}
+
+	return 0;
+
+
 	return 0;
 
 }
