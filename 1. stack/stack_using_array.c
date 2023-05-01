@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define MAX_STACK_SIZE 100
 typedef int element;
@@ -20,6 +21,7 @@ void push(element item)
     if(is_full())
     {
         fprintf(stderr, "stack full error\n");
+        return;
     }
     else 
     {
@@ -32,6 +34,7 @@ element pop()
     if(is_empty())
     {
         fprintf(stderr, "stack empty error\n");
+        exit(1);
     }
     else
     {
@@ -44,6 +47,7 @@ element peek()
     if(is_empty())
     {
         fprintf(stderr, "stack empty error\n");
+        exit(1);
     }
     else
     {
