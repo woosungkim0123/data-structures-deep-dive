@@ -18,8 +18,6 @@ void printList(ListNode *head);
 int getNodeCount(ListNode* head);
 void memoryFree(ListNode *head);
 
-// ListNode* delete_first(ListNode* head);
-// ListNode* delete(ListNode* head, ListNode* pre);
 /*
     단일 연결리스트
 */
@@ -104,6 +102,48 @@ ListNode * insertTailNode(ListNode *head, element value)
 
     return head;
 }
+
+/*
+    노드를 생성하여 연결리스트 정렬에 맞게 삽입합니다.
+    시간복잡도: 0(n)
+*/
+ListNode * insertSortNode(ListNode *head, element value)
+{
+    ListNode *newNode = (ListNode *)malloc(sizeof(ListNode));
+    newNode->value = value;
+    newNode->next = NULL;
+
+    if (head == NULL) // 연결리스트 구성 되기 전
+    {
+        head = newNode;
+        return head;
+    }
+
+    if (head->value > newNode->value) // 가장 작은 값이 들어옴
+    {
+        newNode->next = head;
+        head = newNode;
+        return head;
+    }
+
+    // 일반적인 경우
+    ListNode *currentNode = head;
+    while (currentNode->next != NULL)
+    {   
+        if (currentNode->next > newNode->value)
+        {
+            newNode->next = currentNode->next;
+            currentNode->next = newNode;
+            return head;
+        }
+        currentNode = currentNode->next;
+    }
+
+    // 가장 큰 값이 삽입
+    currentNode->next = newNode;
+    return head;
+}
+
 /*
     연결리스트 맨 앞의 노드를 제거합니다.
     시간복잡도: 0(1)
