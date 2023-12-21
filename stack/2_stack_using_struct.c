@@ -3,7 +3,7 @@
 #define MAX_STACK_SIZE 70
 #define MAX_STRING 50
 
-typedef struct {
+typedef struct user {
     int no;
     char name[MAX_STRING];
     char address[MAX_STRING];
@@ -12,12 +12,34 @@ typedef struct {
 user stack[MAX_STACK_SIZE];
 int top = -1;
 
-int is_empty()
+int isEmpty();
+int isFull();
+void push(user item);
+user pop();
+user peek();
+
+int main() 
+{
+    user iu = { 20230501,
+                "KIM",
+                "DAEGU" };
+    user ou;
+
+    push(iu);
+    ou = pop();
+
+    printf("user_no : %d\n", ou.no);
+    printf("user_name : %s\n", ou.name);
+    printf("user_address : %s\n", ou.address);
+    return 0;
+}
+
+int isEmpty()
 {
     return (top == -1);
 }
 
-int is_full()
+int isFull()
 {
     return (top == (MAX_STACK_SIZE - 1));
 }
@@ -59,19 +81,4 @@ user peek()
     {
         return stack[top];
     }
-}
-
-int main() {
-    user iu = { 20230501,
-                "KIM",
-                "DAEGU" };
-    user ou;
-
-    push(iu);
-    ou = pop();
-
-    printf("user_no : %d\n", ou.no);
-    printf("user_name : %s\n", ou.name);
-    printf("user_address : %s\n", ou.address);
-    return 0;
 }

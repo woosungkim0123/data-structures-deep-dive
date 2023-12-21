@@ -8,26 +8,51 @@ typedef struct {
     int top;
 }Stack;
 
-void init_stack(Stack* s)
+void initStack(Stack* s);
+int isEmpty(Stack* s);
+int isFull(Stack* s);
+void push(Stack* s, element item);
+element pop(Stack* s);
+element peek(Stack* s);
+
+int main() 
+{
+    Stack s;
+    initStack(&s);
+
+    for (int i = 0; i < 100; i++) {
+        push(&s, i);
+    }
+    for (int i = 0; i < 100; i++) {
+        printf("%d\n", pop(&s));
+    }
+    free(s.data);
+
+    return 0;
+}
+
+void initStack(Stack* s)
 {
     s->top = -1;
     s->capacity = 1;
     s->data = (element*)malloc(s->capacity * sizeof(element));
 }
 
-int is_empty(Stack* s)
+int isEmpty(Stack* s)
 {
     return (s->top == -1);
 }
 
-int is_full(Stack* s)
+int isFull(Stack* s)
 {
     return (s->top == (s->capacity - 1));
 }
-
+/*
+    가득차면 새로운 배열을 할당하여 복사합니다.
+*/
 void push(Stack* s, element item)
 {
-    if (is_full(s))
+    if (isFull(s))
     {
         s->capacity *= 2;
         s->data = (element*)realloc(s->data, s->capacity * sizeof(element));
@@ -50,7 +75,7 @@ element pop(Stack* s)
 
 element peek(Stack* s)
 {
-    if (is_empty(s))
+    if (isEmpty(s))
     {
         fprintf(stderr, "stack empty error\n");
         exit(1);
@@ -59,19 +84,4 @@ element peek(Stack* s)
     {
         return s->data[s->top];
     }
-}
-
-int main() {
-    Stack s;
-    init_stack(&s);
-
-    for (int i = 0; i < 100; i++) {
-        push(&s, i);
-    }
-    for (int i = 0; i < 100; i++) {
-        printf("%d\n", pop(&s));
-    }
-    free(s.data);
-
-    return 0;
 }
