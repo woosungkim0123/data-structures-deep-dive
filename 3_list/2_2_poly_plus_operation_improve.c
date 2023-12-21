@@ -7,15 +7,22 @@ typedef struct ListNode {
     struct ListNode *next;
 } ListNode;
 
+typedef struct ListType {
+    int size;
+    ListNode *head;
+    ListNode *tail;
+} ListType;
+
 ListNode * insertSortNode(ListNode *head, int coef, int expon);
 void polyPrint(ListNode* head);
-ListNode * polyAdd(ListNode *a, ListNode *b, ListNode *c);
+ListType * create();
+void * polyAdd(ListNode *a, ListNode *b, ListType *c);
 
 int main()
 {
     ListNode *headA = NULL;
     ListNode *headB = NULL;
-    ListNode *headC = NULL;
+    ListType *c = create();
     
     headA = insertSortNode(headA, 3, 12);
     headA = insertSortNode(headA, 4, 12);
@@ -28,11 +35,41 @@ int main()
 
     polyPrint(headA);
     polyPrint(headB);
-    headC = polyAdd(headA, headB, headC);
+    polyAdd(headA, headB, c);
 
-    polyPrint(headC);
+    polyPrint(c->head);
 
     return 0;
+}
+
+ListType * create()
+{
+    ListType *plist = (ListType *)malloc(sizeof(ListType));
+    plist->size = 0;
+    plist->head = plist->tail = NULL;
+    return plist;
+}
+/*
+    노드를 생성하여 연결리스트 끝에 삽입합니다.
+    시간복잡도: 0(1)
+*/
+void insertLast(ListType *plist, int coef, int expon)
+{
+    ListNode *newNode = (ListNode *)malloc(sizeof(ListNode));
+    newNode->coef = coef;
+    newNode->expon = expon;
+    newNode->next = NULL;
+
+    if (plist->tail == NULL)
+    {
+        plist->head = plist->tail = newNode;
+    }
+    else
+    {
+        plist->tail->next = newNode;
+        plist->tail = newNode;
+    }
+    plist->size++;
 }
 
 /*
@@ -93,11 +130,7 @@ ListNode * insertSortNode(ListNode *head, int coef, int expon)
     return head;
 }
 
-/*
-    다항식의 덧셈을 수행합니다.
-    시간복잡도: O(N+M)
-*/
-ListNode * polyAdd(ListNode *a, ListNode *b, ListNode *c)
+void * polyAdd(ListNode *a, ListNode *b, ListType *c)
 {
     int sum;
 
@@ -108,32 +141,31 @@ ListNode * polyAdd(ListNode *a, ListNode *b, ListNode *c)
             sum = a->coef + b->coef;
             if (sum != 0)
             {
-                c = insertSortNode(c, sum, a->expon);
+                insertLast(c, sum, a->expon);
             }
             a = a->next;
             b = b->next;
         }
         else if (a->expon > b->expon)
         {
-            c = insertSortNode(c, a->coef, a->expon);
+            insertLast(c, a->coef, a->expon);
             a = a->next;
         }
         else
         {
-            c = insertSortNode(c, b->coef, b->expon);
+            insertLast(c, b->coef, b->expon);
             b = b->next;
         }
     }
 
     for (; a != NULL; a = a->next)
     {
-        c = insertSortNode(c, a->coef, a->expon);
+        insertLast(c, a->coef, a->expon);
     }
     for (; b != NULL; b = b->next)
     {
-        c = insertSortNode(c, b->coef, b->expon);
+        insertLast(c, b->coef, b->expon);
     }
-    return c;
 }
 
 void polyPrint(ListNode* head)
