@@ -96,12 +96,19 @@ element dequeue(QueueType *q)
 
 void print(QueueType *q)
 {
-    Queue *p;
-    for (p = q->pHead; p != NULL; p = p->link) 
+    Queue *p = q->pHead;
+    if (p == NULL) 
+    {
+        fprintf(stderr, "queue is empty\n");
+        return;
+    }
+    
+    while (p != q->pTail) 
     {
         printf("%d->", p->value);
+        p = p->link;
     }
-    printf("\n");
+    printf("%d\n", p->value);
 }
 
 /*
@@ -120,8 +127,8 @@ element peak(QueueType *q)
 
 /*
 print result:
-    1->2->3->
-    dequeue: 2->3->
-    dequeue: 3->
-    dequeue
+    1->2->3
+    dequeue: 2->3
+    dequeue: 3
+    dequeue: queue is empty
 */
