@@ -2,11 +2,12 @@
 #include <stdlib.h>
 
 typedef int element;
-typedef struct {
+typedef struct Stack 
+{
     element* data;
     int capacity;
     int top;
-}Stack;
+} Stack;
 
 void initStack(Stack* s);
 int isEmpty(Stack* s);

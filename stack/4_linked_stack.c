@@ -2,14 +2,15 @@
 #include <stdlib.h>
 
 typedef int element;
-typedef struct Stack {
+typedef struct Stack 
+{
     element value;
     struct Stack *link;
-} Stack;
+}Stack;
 
 typedef struct {
     Stack *top;
-} StackType;
+}StackType;
 
 void init(StackType *s);
 int isEmpty(StackType *s);

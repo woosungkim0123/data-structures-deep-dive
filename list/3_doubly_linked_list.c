@@ -2,11 +2,12 @@
 #include <stdlib.h>
 
 typedef int element;
-typedef struct ListNode {
+typedef struct ListNode 
+{
     element value;
     struct ListNode* prev;
     struct ListNode* next;
-} ListNode;
+}ListNode;
 
 ListNode * insertFrontNode(ListNode *head, element value);
 ListNode * insertTailNode(ListNode *head, element value);

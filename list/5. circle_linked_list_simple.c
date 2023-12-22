@@ -9,7 +9,7 @@ typedef struct {
 
 ListNode* insert_first(ListNode* head, element data)
 {
-    ListNode* node = (ListNode*)malloc(sizeof(ListNode));
+    ListNode* node = (ListNode *)malloc(sizeof(ListNode));
     node->data = data;
     if (head == NULL)
     {

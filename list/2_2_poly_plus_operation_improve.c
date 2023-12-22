@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct ListNode {
+typedef struct ListNode 
+{
     int coef; // 계수
     int expon; // 지수
     struct ListNode *next;
-} ListNode;
+}ListNode;
 
-typedef struct ListType {
+typedef struct ListType 
+{
     int size;
     ListNode *head;
     ListNode *tail;
-} ListType;
+}ListType;
 
 ListNode * insertSortNode(ListNode *head, int coef, int expon);
 void polyPrint(ListNode* head);
