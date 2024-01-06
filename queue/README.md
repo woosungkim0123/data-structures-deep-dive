@@ -16,8 +16,6 @@
 
 이 구조에서는 배열의 시작과 끝이 연결되어 있어서, 큐의 용량이 가득 찰 때까지 데이터를 순환시킬 수 있습니다.
 
-코드는 `1_circle_queue_using_array.c`에서 확인하실 수 있습니다.
-
 ![circle queue](image/circle_queue.png)
 
 ### 연결리스트를 이용한 큐
@@ -25,7 +23,5 @@
 연결 리스트를 사용한 큐는 데이터 요소가 노드의 형태로 저장되며, 각 노드는 다음 노드를 가리키는 포인터를 가집니다. 이 구조를 사용하면 메모리를 동적으로 할당하여 큐의 크기를 런타임에 조절할 수 있습니다.
 
 tail 포인터를 사용함으로써 enqueue 연산의 시간 복잡도를 O(n)에서 O(1)로 감소 시킬 수 있습니다.
-
-코드는 `2_queue_using_linked_list.c`에서 확인하실 수 있습니다.
 
 ![linked list queue](image/queue_linked_list.png)
