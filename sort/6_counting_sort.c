@@ -7,7 +7,7 @@ void print_array(int *arr, int size);
 #define ARRAY_SIZE 10
 
 /**
- * n: 데이터 개수, k: 버킷의 수
+ * n: 데이터 개수, k: 데이터의 개수
  * 시간복잡도: 조건이 맞으면 0(n + k)
 */
 int main()
