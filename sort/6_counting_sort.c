@@ -17,7 +17,7 @@ int main()
     printf("Array before sorting: ");
     print_array(arr, ARRAY_SIZE);
 
-    bucket_sort(arr, ARRAY_SIZE, 6); // 5는 배열의 최대값 + 1(인덱스 0은 더미로 사용)
+    counting_sort(arr, ARRAY_SIZE, 6); // 5는 배열의 최대값 + 1(인덱스 0은 더미로 사용)
     
     printf("Array after sorting: ");
     print_array(arr, ARRAY_SIZE);
