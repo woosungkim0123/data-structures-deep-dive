@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void bucket_sort(int *arr, int size, int range);
+void counting_sort(int *arr, int size, int range);
 void print_array(int *arr, int size);
 
 #define ARRAY_SIZE 10
@@ -25,7 +25,7 @@ int main()
     return 0;
 }
 
-void bucket_sort(int *arr, int size, int range)
+void counting_sort(int *arr, int size, int range)
 {
     // calloc 0으로 초기화된 메모리를 할당 (첫번째 인자로 크기)
     int *bucket = (int *)calloc(range, sizeof(int));
