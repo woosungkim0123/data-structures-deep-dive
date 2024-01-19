@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-typedef struct TreeNode {
+typedef struct TreeNode 
+{
     int data;
     struct TreeNode *left;
     struct TreeNode *right;
@@ -10,7 +11,7 @@ void inorder(TreeNode *root)
 {
     if(root != NULL) {
         inorder(root->left);
-        printf("[%d] ", root->data);
+        printf("[%d] ", root->data); // 중위 순회
         inorder(root->right);
     }    
 }
@@ -18,7 +19,7 @@ void inorder(TreeNode *root)
 void preorder(TreeNode *root)
 {
     if(root != NULL) {
-        printf("[%d] ", root->data);
+        printf("[%d] ", root->data); // 전위 순회
         preorder(root->left);
         preorder(root->right);
     }    
@@ -29,7 +30,7 @@ void postorder(TreeNode *root)
     if(root != NULL) {
         postorder(root->left);
         postorder(root->right);
-        printf("[%d] ", root->data);
+        printf("[%d] ", root->data); // 후위 순회
     }    
 }
 
