@@ -6,6 +6,27 @@ typedef struct Graph {
     int **arr; // 동적 할당된 포인터 배열의 주소를 저장
 } Graph;
 
+void init(Graph *pGraph, int count);
+void unDirectedEdge(Graph *pGraph, int start, int end);
+void edgePrint(Graph *pGraph);
+void memoryFree(Graph *pGraph);
+
+int main()
+{
+    Graph graph;
+    init(&graph, 4);
+
+    unDirectedEdge(&graph, 0, 1);
+    unDirectedEdge(&graph, 0, 2);
+    unDirectedEdge(&graph, 1, 2);
+    unDirectedEdge(&graph, 2, 3);
+
+    edgePrint(&graph);
+
+    memoryFree(&graph);
+    return 0;
+}
+
 void init(Graph *pGraph, int count)
 {
     pGraph->vertexCount = count;
@@ -13,56 +34,39 @@ void init(Graph *pGraph, int count)
 
     for (int i = 0; i < count; i++) 
     {
-        pGraph->arr[i] = (int *)malloc(sizeof(int) * count);
+        pGraph->arr[i] = (int *)calloc(count, sizeof(int)); // 0으로 초기화된 배열이 만들어짐
     }
 }
 
-void insert_vertex(GraphType* g, int v)
+void unDirectedEdge(Graph *pGraph, int start, int end)
 {
-    if (((g->n) + 1) > MAX_VERTICES) {
-        fprintf(stderr, "graph vertex error");
-        return;
-    }
-    g->n++;
-}
-
-void insert_edge(GraphType* g, int start, int end)
-{
-    if (start >= g->n || end >= g->n) {
+    if (start >= pGraph->vertexCount || end >= pGraph->vertexCount) 
+    {
         fprintf(stderr, "graph edge error");
         return;
     }
-    g->adj_mat[start][end] = 1;
-    g->adj_mat[end][start] = 1;
+
+    pGraph->arr[start][end] = 1;
+    pGraph->arr[end][start] = 1;
 }
 
-void print_adj_mat(GraphType* g)
+void edgePrint(Graph *pGraph)
 {
-    for (int r = 0; r < g->n; r++) {
-        for (int c = 0; c < g->n; c++) {
-            printf("%d ", g->adj_mat[r][c]);
+    for (int i = 0; i < pGraph->vertexCount; i++) 
+    {
+        for (int j = 0; j < pGraph->vertexCount; j++) 
+        {
+            printf("%d ", pGraph->arr[i][j]);
         }
         printf("\n");
     }
 }
 
-void main()
+void memoryFree(Graph *pGraph)
 {
-    GraphType *g;
-    g = (GraphType*)malloc(sizeof(GraphType));
-    init(g);
-
-    for (int i = 0; i < 4; i++) {
-        insert_vertex(g, i);
+    for (int i = 0; i < pGraph->vertexCount; i++) 
+    {
+        free(pGraph->arr[i]); // arr[i]이 가리키는 일차원 배열 제거
     }
-    insert_edge(g, 0, 1);
-    insert_edge(g, 0, 2);
-    insert_edge(g, 0, 3);
-    insert_edge(g, 1, 2);
-    insert_edge(g, 2, 3);
-    
-    print_adj_mat(g);
-
-    free(g);
+    free(pGraph->arr); // 이차원 배열을 만들기 위한 포인터 배열 제거
 }
-
