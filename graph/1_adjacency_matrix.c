@@ -1,20 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_VERTICES 50
-typedef struct GraphType {
-    int n;
-    int adj_mat[MAX_VERTICES][MAX_VERTICES];
-} GraphType;
+typedef struct Graph {
+    int vertexCount;
+    int **arr; // 동적 할당된 포인터 배열의 주소를 저장
+} Graph;
 
-
-void init(GraphType* g)
+void init(Graph *pGraph, int count)
 {
-    g->n = 0;
-    for (int r = 0; r < MAX_VERTICES; r++) {
-        for (int c = 0; c < MAX_VERTICES; c++) {
-            g->adj_mat[r][c] = 0;
-        }
+    pGraph->vertexCount = count;
+    pGraph->arr = (int **)malloc(sizeof(int *) * count); // 정점이 저장되는 배열이 만들어짐
+
+    for (int i = 0; i < count; i++) 
+    {
+        pGraph->arr[i] = (int *)malloc(sizeof(int) * count);
     }
 }
 
