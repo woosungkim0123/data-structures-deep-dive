@@ -60,7 +60,7 @@ void push(User item)
 
 User pop()
 {
-    if (is_empty())
+    if (isEmpty())
     {
         fprintf(stderr, "stack empty error\n");
         exit(1);
@@ -73,7 +73,7 @@ User pop()
 
 User peek()
 {
-    if (is_empty())
+    if (isEmpty())
     {
         fprintf(stderr, "stack empty error\n");
         exit(1);

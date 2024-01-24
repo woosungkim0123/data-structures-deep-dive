@@ -2,14 +2,13 @@
 #include <stdlib.h>
 
 typedef int element;
-typedef struct Stack 
-{
+typedef struct Stack {
     element* data;
     int capacity;
     int top;
 } Stack;
 
-void initStack(Stack* s);
+void initStack(Stack* s, int size);
 int isEmpty(Stack* s);
 int isFull(Stack* s);
 void push(Stack* s, element item);
@@ -19,7 +18,7 @@ element peek(Stack* s);
 int main() 
 {
     Stack s;
-    initStack(&s);
+    initStack(&s, 100);
 
     for (int i = 0; i < 100; i++) {
         push(&s, i);
@@ -32,11 +31,11 @@ int main()
     return 0;
 }
 
-void initStack(Stack* s)
+void initStack(Stack* s, int size)
 {
     s->top = -1;
-    s->capacity = 1;
-    s->data = (element*)malloc(s->capacity * sizeof(element));
+    s->capacity = size;
+    s->data = (element*)malloc(size * sizeof(element));
 }
 
 int isEmpty(Stack* s)
@@ -63,7 +62,7 @@ void push(Stack* s, element item)
 
 element pop(Stack* s)
 {
-    if (is_empty(s))
+    if (isEmpty(s))
     {
         fprintf(stderr, "stack empty error\n");
         exit(1);
