@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "stack.h"
+#include "header/stack.h"
 
 typedef struct Node {
     int vertex; // 정점
