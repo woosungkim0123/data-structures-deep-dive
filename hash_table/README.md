@@ -40,7 +40,7 @@ $$\text{부하율} = \frac{\text{전체 키 개수}}{\text{해시 테이블의 �
 
 ![load factor](image/load_factor.png)
 
-### 충돌 해결 방법 1 - 개방 주소법(open addressing)
+### 충돌 해결 방법 2 - 개방 주소법(open addressing)
 
 빈 버킷을 찾을 때까지 해싱을 반복하는 방법(재해싱, rehashing)입니다.
 

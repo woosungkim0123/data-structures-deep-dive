@@ -19,6 +19,7 @@ void hashDisplay(HashTable *pHt);
 int hashFind(HashTable *pHt, int target);
 void memoryFree(HashTable *pHt);
 int hashRemove(HashTable *pHt, int target);
+int hashString(const char *str, int size);
 
 int main()
 {
@@ -135,6 +136,17 @@ int hashFunction(int key, int size)
 {
     return key % size;
 }
+// 문자열을 해시 테이블의 인덱스로 사용할 수도 있다.
+int hashString(const char *str, int size) //문자열, 해시 테이블의 사이즈
+{
+	int i;
+	int total = 0;
+	for (i = 0; str[i] != '\0'; i++) //문자열의 끝까지 반복
+		total += str[i]; //아스키 코드값을 누적
+
+	return total % size;
+}
+
 
 void hashDisplay(HashTable *pHt)
 {
