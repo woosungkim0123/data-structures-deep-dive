@@ -1,257 +1,223 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int INFINITE =  987654321;
-const int VERTEX_COUNT = 6;
+#define MAX_NODES 6
+#define INF 987654321
+
+typedef struct Edge {
+    int dest;
+    int cost;
+    struct Edge *next;
+}Edge;
+
+typedef struct Graph {
+    Edge *head;
+}Graph;
 
 typedef struct Node {
     int vertex;
     int cost;
-    struct Node *next;
 }Node;
 
-typedef struct Graph {
-    int count; // 정점의 개수
-    Node *arr;
-}Graph;
+typedef struct MinHeap {
+    Node nodes[MAX_NODES];
+    int size;
+}MinHeap;
 
-typedef struct TableNode {
-	int vertex;
-	int cost;
-	int visited;
-}TableNode;
+void swap(Node *a, Node *b);
+void initMinHeap(MinHeap *heap);
+void insertMinHeap(MinHeap *heap, int vertex, int cost);
+void heapifyUp(MinHeap *heap, int currentIndex);
+void heapifyDown(MinHeap *heap, int currentIndex);
+void addDirectedEdge(Graph *pGrp, int src, int dest, int cost);
+void addUnDirectedEdge(Graph *pGrp, int src, int dest, int cost);
+void initGraph(Graph *graph, int numNodes);
+void freeGraph(Graph *graph, int numNodes);
+void dijkstra(Graph *graph, int src);
 
-typedef struct Heap {
-    TableNode *arr; // 힙을 저장하는 배열
-    int size; // 배열의 크기
-    int capacity;  // 배열의 최대용량
-}Heap;
-
-void dijkstra(Graph *pGrp, int startVertex);
-void shiftDown(TableNode *arr, int parentIndex, int size);
-void heapify(TableNode *arr, int size);
-void heapInit(Heap *heap, TableNode *arr, int size);
-void display(Graph *pGrp);
-void graphInit(Graph *pGrp, int vertexCnt);
-void addDirectedEdge(Graph *pGrp, int src, int dst, int cost);
-void addUnDirectedEdge(Graph *pGrp, int src, int dst, int cost);
-void memoryFree(Graph *pGrp);
-
-
-int main()
+int main() 
 {
+    // Graph 초기화
+    Graph graph[MAX_NODES];
+    initGraph(graph, MAX_NODES);
 
-    Graph graph;
-    
-    graphInit(&graph, VERTEX_COUNT);
+    addDirectedEdge(graph, 0, 1, 3);
+    addDirectedEdge(graph, 0, 2, 1);
+    addDirectedEdge(graph, 0, 3, 10);
+    addDirectedEdge(graph, 1, 3, 5);
+    addDirectedEdge(graph, 2, 3, 8);
+    addDirectedEdge(graph, 2, 4, 4);
+    addDirectedEdge(graph, 2, 5, 6);
+    addDirectedEdge(graph, 3, 5, 2);
+    addDirectedEdge(graph, 4, 5, 8);
 
-    addUnDirectedEdge(&graph, 0, 1, 3);
-    addUnDirectedEdge(&graph, 0, 2, 1);
-    addUnDirectedEdge(&graph, 0, 3, 10);
-    addUnDirectedEdge(&graph, 1, 3, 5);
-    addUnDirectedEdge(&graph, 2, 3, 8);
-    addUnDirectedEdge(&graph, 2, 4, 4);
-    addUnDirectedEdge(&graph, 2, 5, 6);
-    addUnDirectedEdge(&graph, 3, 5, 2);
-    addUnDirectedEdge(&graph, 4, 5, 8);
+    dijkstra(graph, 0);
 
-    display(&graph);
-
-    dijkstra(&graph, 0);
-
-    memoryFree(&graph);
+    freeGraph(graph, MAX_NODES);
 
     return 0;
 }
 
-void graphInit(Graph *pGrp, int vertexCnt) 
+void swap(Node *a, Node *b)
 {
-    pGrp->count = vertexCnt;
-    pGrp->arr = (Node *)calloc(vertexCnt, sizeof(Node));
-    
-    for (int i = 0; i < vertexCnt; i++) 
+    Node temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void initMinHeap(MinHeap *heap) 
+{
+    heap->size = 0;
+}
+
+void insertMinHeap(MinHeap *heap, int vertex, int cost) 
+{
+    // 힙의 맨 끝에 새로운 노드를 추가한다.
+    int currentIndex = heap->size++;
+    heap->nodes[currentIndex].vertex = vertex;
+    heap->nodes[currentIndex].cost = cost;
+
+    heapifyUp(heap, currentIndex);
+}
+
+void heapifyUp(MinHeap *heap, int currentIndex)
+{
+    int parentIndex = (currentIndex - 1) / 2;
+
+    // 부모 노드가 존재하고, 부모 노드의 값이 자식 노드의 값보다 크다면 swap (최소힙)
+    if (parentIndex >= 0 && heap->nodes[parentIndex].cost > heap->nodes[currentIndex].cost)
     {
-        pGrp->arr[i].vertex = i;
-        pGrp->arr[i].cost = 0;
-        pGrp->arr[i].next = NULL;
+        swap(&heap->nodes[parentIndex], &heap->nodes[currentIndex]);
+        heapifyUp(heap, parentIndex);
     }
 }
 
-void dijkstra(Graph *pGrp, int startVertex)
+void heapifyDown(MinHeap *heap, int currentIndex) 
 {
-    // 내부값 전부 0으로 초기화
-    TableNode *table = (TableNode *)calloc(VERTEX_COUNT, sizeof(TableNode));
-
-    for (int i = 0; i < pGrp->count; i++)
-    {
-        table[i].vertex = i;
-
-        if (i == startVertex)
-        {
-            table[i].cost = 0;
-        }
-        else
-        {
-            table[i].cost = INFINITE;
-        }
-    }
-
-    // 0에서 인접한 노드의 가중치 값을 저장
-    Node *curNode = pGrp->arr[startVertex].next;
-    
-    while(curNode)
-	{
-		table[curNode->vertex].cost = curNode->cost;
-		curNode = curNode->next;
-	}
-
-    Heap heap;
-    // 최소힙
-	heapInit(&heap, table, pGrp->count);
-
-    int top = 0;
-
-    while (heap.size > 0)
-    {
-        int vertex = heap.arr[top].vertex; // 가장 위. 즉, 가장 작은 값을 가진 노드의 인덱스
-        table[vertex].visited = 1; // 방문처리
-        heap.size--;
-        top++;
-
-        curNode = pGrp->arr[vertex].next;
-
-        while(curNode) 
-        {
-			int destination = curNode->vertex;
-            int cost = curNode->cost;
-
-            // 현재 노드의 가중치 + 다음 노드의 가중치가 다음 노드의 가중치보다 작을 때
-			int newCost = cost + table[vertex].cost;
-
-            if (table[destination].visited == 0 && newCost < table[destination].cost)
-            {
-                table[destination].cost = newCost;
-                shiftDown(table, destination, heap.size);
-            }
-			curNode = curNode->next;
-        }
-    }
-
-    for(int i = 0; i < pGrp->count; i++) 
-    {
-		if(table[i].cost == INFINITE)
-        {
-            printf("unreachable\n");
-        }
-		else
-        {
-            printf("vertex 0 ~ vertex %d cost = %d\n", i, table[i].cost);
-        }
-			
-	}
-
-}
-
-void addUnDirectedEdge(Graph *pGrp, int src, int dst, int cost) 
-{
-	addDirectedEdge(pGrp, src, dst, cost);
-	addDirectedEdge(pGrp, dst, src, cost);
-}
-
-// 포인터, 출발지, 도착지, 비용
-void addDirectedEdge(Graph *pGrp, int src, int dst, int cost) 
-{
-    Node *newNode = (Node *)malloc(sizeof(Node));
-
-	// 인접리스트 방식 (맨 앞에 삽입)
-	newNode->vertex = dst;
-	newNode->cost = cost;
-	newNode->next = pGrp->arr[src].next;
-	pGrp->arr[src].next = newNode;
-}
-
-void heapInit(Heap *heap, TableNode *arr, int size)
-{
-    heap->capacity = VERTEX_COUNT;
-    heap->size = size;
-    heap->arr = arr;
-    heapify(heap->arr, heap->size);
-}
-
-void heapify(TableNode *arr, int size)
-{
-    // 완전 이진 트리 부모 노드의 개수 = (전체 개수 / 2)
-    int parent = (size / 2) - 1; // -1을 해주는 이유는 배열의 인덱스가 0부터 시작하기 때문에
-
-    for (int i = parent; i >= 0; i--)
-    {
-        shiftDown(arr, i, size); // 부모 노드의 값을 자식 노드의 값과 비교;
-    }
-}
-
-// 최소힙
-void shiftDown(TableNode *arr, int parentIndex, int size)
-{
-    int leftChildIndex = parentIndex * 2 + 1;
+    int leftChildIndex = 2 * currentIndex + 1;
     int rightChildIndex = leftChildIndex + 1;
-    int smallIndex = -1;
+    int smallestIndex = currentIndex;
 
-    if (leftChildIndex < size)
+    if (leftChildIndex < heap->size && heap->nodes[leftChildIndex].cost < heap->nodes[smallestIndex].cost) 
     {
-        smallIndex = leftChildIndex;
+        smallestIndex = leftChildIndex;
     }
 
-    // 오른쪽 자식이 부모 보다 작을 때
-    if (rightChildIndex < size && arr[rightChildIndex].cost < arr[leftChildIndex].cost)
+    if (rightChildIndex < heap->size && heap->nodes[rightChildIndex].cost < heap->nodes[smallestIndex].cost) 
     {
-        smallIndex = rightChildIndex;
+        smallestIndex = rightChildIndex;
     }
-    
-    // 자식의 값이 부모보다 작을 때
-    if (smallIndex != -1 && arr[smallIndex].cost < arr[parentIndex].cost)
-    {
-        TableNode temp = arr[smallIndex];
-        arr[smallIndex] = arr[parentIndex];
-        arr[parentIndex] = temp;
 
-        shiftDown(arr, smallIndex, size);
+    if (smallestIndex != currentIndex) 
+    {
+        swap(&heap->nodes[currentIndex], &heap->nodes[smallestIndex]);
+        heapifyDown(heap, smallestIndex);
     }
 }
 
-void memoryFree(Graph *pGrp)
+Node extractMin(MinHeap *heap) 
 {
-    Node *delNode = NULL;
+    Node temp = heap->nodes[0]; // 임시 변수에 최소값을 저장한다.
+    heap->nodes[0] = heap->nodes[heap->size - 1]; // 힙의 루트를 마지막 원소로 대체
+    heap->size--; // 힙의 크기를 감소
 
-    for (int i = 0; i < pGrp->count; i++) 
+    heapifyDown(heap, 0); // 힙을 재정렬한다.
+
+    return temp;
+}
+
+void addDirectedEdge(Graph *pGrp, int src, int dest, int cost)
+{
+    Edge *newNode = (Edge *)malloc(sizeof(Edge));
+    newNode->dest = dest;
+    newNode->cost = cost;
+    newNode->next = pGrp[src].head;
+    pGrp[src].head = newNode;
+}
+
+void addUnDirectedEdge(Graph *pGrp, int src, int dest, int cost)
+{
+    addDirectedEdge(pGrp, src, dest, cost);
+    addDirectedEdge(pGrp, dest, src, cost);
+}
+
+void dijkstra(Graph *graph, int src) 
+{
+    // 최소힙을 초기화한다.
+    MinHeap heap;
+    initMinHeap(&heap);
+
+    int dist[MAX_NODES]; // 최단 거리를 저장할 배열 
+    int visited[MAX_NODES] = {0}; // 방문 여부를 저장할 배열
+
+    for (int i = 0; i < MAX_NODES; i++) 
     {
-        while (pGrp->arr[i].next != NULL)
+        dist[i] = INF;
+    }
+    dist[src] = 0; // 출발지의 거리는 0
+
+    insertMinHeap(&heap, src, 0); // 출발지를 최소힙에 삽입한다.
+
+    while (heap.size > 0) 
+    {
+        // 최소힙에서 최소값을 추출한다.
+        Node minNode = extractMin(&heap);
+        int currentVertex = minNode.vertex;
+
+        // 이미 방문한 정점이라면 무시한다.
+        if (visited[currentVertex])
         {
-            delNode = pGrp->arr[i].next;
-            pGrp->arr[i].next = delNode->next;
-            free(delNode);
+            continue;
+        }
+
+        visited[currentVertex] = 1; // 방문 표시를 한다.
+
+        // 현재 정점과 연결된 모든 간선을 순회한다.
+        Edge *edge = graph[currentVertex].head; 
+        while (edge) 
+        {
+            int neighborVertex = edge->dest; // 현재 정점과 연결된 정점
+            int edgeCost = edge->cost; // 현재 정점과 연결된 정점의 비용
+
+            // 이웃 정점이 방문한 적이 없고, 현재 정점을 거쳐서 이웃 정점으로 가는 비용이 더 작다면 최단 거리를 갱신한다.
+            if (!visited[neighborVertex] && dist[neighborVertex] > dist[currentVertex] + edgeCost) 
+            {
+                dist[neighborVertex] = dist[currentVertex] + edgeCost;
+                insertMinHeap(&heap, neighborVertex, dist[neighborVertex]);
+            }
+            edge = edge->next;
         }
     }
 
-    free(pGrp->arr);
+    for (int i = 0; i < MAX_NODES; i++) 
+    {
+        if (dist[i] == INF) 
+        {
+            printf("Distance from %d to %d: INF\n", src, i);
+        } else {
+            printf("Distance from %d to %d: %d\n", src, i, dist[i]);
+        }
+    }
 }
 
-void display(Graph *pGrp) 
+void initGraph(Graph *graph, int numNodes) 
 {
-	int i;
-	Node *curNode = NULL;
-
-	if(pGrp->arr == NULL) return;
-
-	for(i = 0; i < pGrp->count; i++) 
+    for (int i = 0; i < numNodes; i++) 
     {
-		curNode = pGrp->arr[i].next;
-		printf("start Node : %d => ", pGrp->arr[i].vertex);
+        graph[i].head = NULL;
+    }
+}
 
-		while(curNode != NULL) 
+void freeGraph(Graph *graph, int numNodes) 
+{
+    for (int i = 0; i < numNodes; i++) 
+    {
+        Edge *current = graph[i].head;
+        while (current) 
         {
-			printf("%d (cost: %d) ", curNode->vertex, curNode->cost);
-			curNode = curNode->next;
-		}
-		puts("");
-	}
+            Edge *temp = current;
+            current = current->next;
+            free(temp);
+        }
+    }
 }
