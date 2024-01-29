@@ -8,7 +8,7 @@
 
 ### 기본 개념
 
-- [자료구조 전 알아두면 좋은 지식]()
+- [자료구조 전 알아두면 좋은 지식](https://github.com/woosungkim0123/data-structures-deep-dive/tree/master/basic)
 
 ### 선형 자료구조 & ADT
 
