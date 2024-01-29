@@ -181,7 +181,3 @@ p[0][1] == *(p[0] + 1)
 ```
 
 ![two_dimensional_array](image/two_dimensional_array.png)
-
-## ADT
-
-
