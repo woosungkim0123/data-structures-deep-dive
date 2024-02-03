@@ -12,6 +12,9 @@ void push(element item);
 element pop();
 element peek();
 
+/**
+ * 배열을 사용한 스택 예제
+*/
 int main() 
 {
     push(4);

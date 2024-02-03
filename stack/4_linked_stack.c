@@ -18,16 +18,21 @@ void push(StackType *s, element value);
 void printStack(StackType *s);
 element pop(StackType *s);
 
+/**
+ * 연결리스트를 사용한 스택 예제
+*/
 int main() 
 {
     StackType *s;
     init(s);
 
-    for (int i = 1; i <= 3; i++) {
+    for (int i = 1; i <= 3; i++)
+    {
         push(s, i);
         printStack(s);
     }
-    for (int i = 1; i <= 3; i++) {
+    for (int i = 1; i <= 3; i++)
+    {
         pop(s);
         printStack(s);
     }
