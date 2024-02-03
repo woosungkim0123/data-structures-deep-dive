@@ -4,6 +4,10 @@ void tower_of_hanoi(int n, char from, char temp, char to);
 int tower_of_hanoi_count(int n);
 int tower_of_hanoi_count_use_math(int n);
 
+/**
+ * 하노이의 탑을 재귀적으로 구하는 함수
+ * 시간복잡도: O(2^n)
+*/
 int main()
 {
     tower_of_hanoi(3, 'A', 'B', 'C');

@@ -4,7 +4,9 @@ typedef int element;
 
 element power_recursion(element n, element m);
 
-
+/**
+ * 거듭 제곱을 재귀적으로 구하는 함수
+*/
 int main() 
 {
     element value = power_recursion(2, 3);
