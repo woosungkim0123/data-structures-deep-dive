@@ -2,13 +2,12 @@
 #include <stdlib.h>
 
 typedef int element;
-typedef struct Stack 
-{
+typedef struct Stack {
     element value;
     struct Stack *link;
 }Stack;
 
-typedef struct {
+typedef struct StackType {
     Stack *top;
 }StackType;
 
