@@ -2,8 +2,7 @@
 #include <stdlib.h>
 
 typedef int element;
-typedef struct ListNode 
-{
+typedef struct ListNode {
     element value;
     struct ListNode* prev;
     struct ListNode* next;

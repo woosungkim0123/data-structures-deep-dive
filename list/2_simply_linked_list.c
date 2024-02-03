@@ -4,8 +4,7 @@
 #pragma warning (disable : 4996)
 
 typedef int element;
-typedef struct ListNode 
-{
+typedef struct ListNode {
     element value;
     struct ListNode *next;
 }ListNode;

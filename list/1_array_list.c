@@ -7,8 +7,7 @@
 #define INCREASE_FACTOR 2
 
 typedef int element;
-typedef struct ArrayList 
-{
+typedef struct ArrayList {
     element *array;
     int size;
     int capacity;
