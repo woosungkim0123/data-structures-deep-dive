@@ -2,8 +2,7 @@
 #include <stdlib.h>
 
 typedef int element;
-typedef struct Queue 
-{
+typedef struct Queue {
     element *arr; // 동적 메모리 주소를 저장하는 포인터
     int front; // 삭제 위치
     int rear; // 삽입 위치

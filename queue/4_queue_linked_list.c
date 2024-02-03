@@ -2,23 +2,25 @@
 #include <stdlib.h>
 
 typedef int element;
-typedef struct Queue 
-{
+typedef struct Queue {
     element value;
     struct Queue *link;
 }Queue;
 
-typedef struct QueueType 
-{
+typedef struct QueueType {
     Queue *pHead;
     Queue *pTail;
 }QueueType;
 
 void init(QueueType *q);
+element isEmpty(QueueType *q);
+element isFull(QueueType *q);
 void enqueue(QueueType *q, element value);
-void print(QueueType *q);
+void printQueue(QueueType *q);
 element dequeue(QueueType *q);
 element peak(QueueType *q);
+
+
 
 int main() 
 {
@@ -26,15 +28,17 @@ int main()
     
     init(&qt);
     
-    for (int i = 1; i <= 3; i++) {
+    for (int i = 1; i <= 3; i++)
+    {
         enqueue(&qt, i);
     }
-    print(&qt);
+    printQueue(&qt);
     
-    for (int i = 1; i <= 3; i++) {
+    for (int i = 1; i <= 3; i++)
+    {
         dequeue(&qt);
-        printf("dequeue: ");
-        print(&qt);
+
+        printQueue(&qt);
     }
 
     return 0;
@@ -42,8 +46,17 @@ int main()
 
 void init(QueueType *q)
 {
-    q->pHead = NULL;
-    q->pTail = NULL;
+    q->pHead = q->pTail = 0;
+}
+
+int isEmpty(QueueType *q)
+{
+    return q->pHead == NULL;
+}
+
+int isFull(QueueType *q)
+{
+    return 0;
 }
 
 /*
@@ -57,13 +70,13 @@ void enqueue(QueueType *q, element value)
     newNode->link = NULL;
     
     // 처음 삽입하는 경우
-    if (q->pHead == NULL) 
+    if (isEmpty(q)) 
     {
         q->pHead = newNode;
         q->pTail = newNode;
         return;
     }
-
+    
     q->pTail->link = newNode;
     q->pTail = newNode;
 }
@@ -74,41 +87,38 @@ void enqueue(QueueType *q, element value)
 */
 element dequeue(QueueType *q)
 {
-    if (q->pHead == NULL) 
+    Queue *temp = q->pHead;
+    element data;
+
+    if (isEmpty(q)) 
     {
         fprintf(stderr, "queue is empty\n");
         exit(1);
     }
-    
-    element delValue = q->pHead->value; // 삭제할 노드의 값
-    Queue *temp = q->pHead; // 삭제할 노드를 임시로 저장
-    q->pHead = q->pHead->link;
-    
-    free(temp); // 임시 변수를 사용하여 메모리 해제
-    
-    // 이동 후에 값이 없는 경우
-    if (q->pHead == NULL) 
+    else
     {
-        q->pTail = NULL;
+        data = temp->value;
+        q->pHead = temp->link;
+
+         // 이동 후에 값이 없는 경우
+        if (q->pHead == NULL)
+        {
+            q->pTail = NULL;
+        }
+        free(temp);
+
+        return data;
     }
-    return delValue;
 }
 
-void print(QueueType *q)
+void printQueue(QueueType *q)
 {
-    Queue *p = q->pHead;
-    if (p == NULL) 
+    Queue *p;
+    for (p = q->pHead; p != NULL; p = p->link)
     {
-        fprintf(stderr, "queue is empty\n");
-        return;
+        printf("%d -> ", p->value);
     }
-    
-    while (p != q->pTail) 
-    {
-        printf("%d->", p->value);
-        p = p->link;
-    }
-    printf("%d\n", p->value);
+    printf("NULL\n");
 }
 
 /*
@@ -123,12 +133,3 @@ element peak(QueueType *q)
     }
     return q->pHead->value;
 }
-
-
-/*
-print result:
-    1->2->3
-    dequeue: 2->3
-    dequeue: 3
-    dequeue: queue is empty
-*/
