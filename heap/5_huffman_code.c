@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_ELEMENT 200
+#define MAX_CODE_LENGTH 100
 
 typedef struct TreeNode {
     int weight;
@@ -21,6 +23,15 @@ typedef struct {
     int size;
 } Heap;
 
+// 허프만 코드
+typedef struct {
+    char ch;
+    char code[MAX_CODE_LENGTH];
+} HuffmanCode;
+
+HuffmanCode huffmanCodes[MAX_ELEMENT]; // 전역 변수로 허프만 코드 저장
+int codeIndex = 0; // 허프만 코드 인덱스
+
 void huffmanTree(char chList[], int freqList[], int n);
 Heap * createHeap();
 void init(Heap *heap);
@@ -31,15 +42,33 @@ void shiftDown(Heap *heap, int parentIndex);
 void destroyTree(TreeNode *root);
 TreeNode * makeTree(TreeNode *left, TreeNode *right);
 void printCode(TreeNode *root, int codes[], int top);
+void storeCodes(TreeNode *root, char *code, int length);
+void encode(char *str, char *encodedStr);
+void decode(TreeNode *root, char *encodedStr, char *decodedStr);
+void encodingDecodingPrint(char *randomString);
+
+TreeNode *encodingRoot = NULL;
 
 /**
  * 허프만 코드
 */
 int main()
 {
+    /**
+     * 허프만 코드 생성
+    */
     char chList[] = {'s', 'i', 'n', 't', 'e'};
     int freqList[] = {4, 6, 8, 12, 15};
+
     huffmanTree(chList, freqList, 5);
+
+    /**
+     * 허프만 코드로 인코딩 디코딩 출력 (chList와 freqList를 이용하여 만든 임의 문자열)
+    */
+    char randomString[] = "nnieneenneineneesenenesttttietitineettieennet";
+    encodingDecodingPrint(randomString);
+
+    destroyTree(encodingRoot);
     return 0;
 }
 
@@ -92,7 +121,13 @@ void huffmanTree(char chList[], int freqList[], int n)
     int codes[100];
     printCode(e.ptree, codes, 0);
     
-    destroyTree(e.ptree);
+    /**
+     * 허프만 코드를 저장하여 인코딩 디코딩 해볼 목적
+    */
+    encodingRoot = e.ptree; // 전역변수에 최종 트리 저장
+    char code[MAX_CODE_LENGTH];
+    storeCodes(e.ptree, code, 0);
+
     free(heap);
 }
 
@@ -223,4 +258,87 @@ void destroyTree(TreeNode *root)
     destroyTree(root->left);
     destroyTree(root->right);
     free(root);
+}
+
+void storeCodes(TreeNode *root, char *code, int length) {
+    if (root == NULL) return;
+
+    // 리프 노드에 도달했을 때 코드 저장
+    if (root->left == NULL && root->right == NULL) {
+        huffmanCodes[codeIndex].ch = root->ch;
+        strncpy(huffmanCodes[codeIndex].code, code, length);
+        huffmanCodes[codeIndex].code[length] = '\0'; // 문자열 끝에 null 추가
+        codeIndex++;
+        return;
+    }
+
+    // 왼쪽 자식 노드로 이동
+    if (root->left) {
+        code[length] = '0';
+        storeCodes(root->left, code, length + 1);
+    }
+
+    // 오른쪽 자식 노드로 이동
+    if (root->right) {
+        code[length] = '1';
+        storeCodes(root->right, code, length + 1);
+    }
+}
+
+void encode(char *str, char *encodedStr) 
+{
+    encodedStr[0] = '\0'; // 인코딩된 문자열 초기화
+    for (int i = 0; str[i] != '\0'; i++) 
+    {
+        for (int j = 0; j < codeIndex; j++) 
+        {
+            if (str[i] == huffmanCodes[j].ch) 
+            {
+                strcat(encodedStr, huffmanCodes[j].code);
+                break;
+            }
+        }
+    }
+}
+
+
+void decode(TreeNode *root, char *encodedStr, char *decodedStr) 
+{
+    TreeNode *current = root;
+    int index = 0;
+    while (*encodedStr) 
+    {
+        if (*encodedStr == '0')
+        {
+            current = current->left;
+        } 
+        else if (*encodedStr == '1') 
+        {
+            current = current->right;
+        }
+        if (current->left == NULL && current->right == NULL) 
+        {
+            decodedStr[index++] = current->ch;
+            current = root; // 다시 루트로
+        }
+        encodedStr++;
+    }
+    decodedStr[index] = '\0'; // 문자열 끝
+}
+
+void encodingDecodingPrint(char *randomString)
+{
+    // 인코딩된 문자열 저장을 위한 배열
+    char encodedStr[1000] = {0};
+    // 디코딩된 문자열 저장을 위한 배열
+    char decodedStr[1000] = {0};
+
+    // 인코딩
+    printf("Before String: %s\n", randomString);
+    encode(randomString, encodedStr);
+    printf("Encoded String: %s\n", encodedStr);
+
+    // 디코딩
+    decode(encodingRoot, encodedStr, decodedStr); // huffmanCodes[0].ptree는 최종 허프만 트리의 루트 노드
+    printf("Decoded String: %s\n", decodedStr);
 }
