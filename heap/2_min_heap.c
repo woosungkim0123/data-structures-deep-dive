@@ -69,26 +69,12 @@ void insert(Heap *heap, int value)
 
     heap->arr[heap->size] = value;
     
-    // 힙구조 만들기 (최대 힙) - shift up - 부모노드와 비교하여 자식노드가 더 크면 교환
+    // 힙구조 만들기 (최소 힙) - shift up - 부모노드와 비교하여 자식노드가 더 크면 교환
     shiftUp(heap->arr, heap->size);
 
     heap->size++;
 }
 
-void extractMin(Heap *heap)
-{
-    if (heap->size == 0)
-    {
-        printf("Heap is empty\n");
-        return;
-    }
-
-    heap->arr[0] = heap->arr[heap->size - 1];
-    heap->size--;
-
-    // 힙구조 만들기 (최대 힙) - shift down - 자식노드와 비교하여 부모노드가 더 작으면 교환
-    shiftDown(heap->arr, 0, heap->size);
-}
 
 void shiftUp(int *arr, int childIndex)
 {
