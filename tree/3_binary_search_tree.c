@@ -7,24 +7,24 @@ typedef struct TreeNode
     struct TreeNode *left, *right;
 } TreeNode;
 
-TreeNode * insert_node(TreeNode * node, int data);
-TreeNode * search(TreeNode * node, int data);
-TreeNode * new_node(int item);
-TreeNode * min_value_node(TreeNode * node);
-TreeNode * max_value_node(TreeNode * node);
-TreeNode * delete_node(TreeNode * root, int data);
-void inorder(TreeNode * root);
+TreeNode * insertNode(TreeNode *node, int data);
+TreeNode * search(TreeNode *node, int data);
+TreeNode * newNode(int item);
+TreeNode * minValueNode(TreeNode *node);
+TreeNode * maxValueNode(TreeNode *node);
+TreeNode * deleteNode(TreeNode *root, int data);
+void inorder(TreeNode *root);
 
 int main() 
 {
     TreeNode *root = NULL;
     
-    root = insert_node(root, 30);
-    root = insert_node(root, 20);
-    root = insert_node(root, 10);
-    root = insert_node(root, 40);
-    root = insert_node(root, 50);
-    root = insert_node(root, 60);
+    root = insertNode(root, 30);
+    root = insertNode(root, 20);
+    root = insertNode(root, 10);
+    root = insertNode(root, 40);
+    root = insertNode(root, 50);
+    root = insertNode(root, 60);
     
     printf("binary tree inorder result\n");
     
@@ -43,7 +43,9 @@ int main()
         printf("binary tree not find %d\n", searchvalue);
     }
 
-    root = delete_node(root, 50);
+    printf("\n");
+
+    root = deleteNode(root, 50);
 
     inorder(root);
 
@@ -71,7 +73,7 @@ TreeNode * search(TreeNode * node, int data)
     }
 }
 
-TreeNode * new_node(int item)
+TreeNode * newNode(int item)
 {
     TreeNode * temp = (TreeNode *)malloc(sizeof(TreeNode));
     temp->data = item;
@@ -79,26 +81,26 @@ TreeNode * new_node(int item)
     return temp;
 }
 
-TreeNode * insert_node(TreeNode * node, int data)
+TreeNode * insertNode(TreeNode * node, int data)
 {
     if (node == NULL) 
     {
-        return new_node(data);
+        return newNode(data);
     }
     
     if (data < node->data) 
     {
-        node->left = insert_node(node->left, data);
+        node->left = insertNode(node->left, data);
     } 
     else if (data > node->data) 
     {
-        node->right = insert_node(node->right, data);
+        node->right = insertNode(node->right, data);
     }
     
     return node;
 }
 
-TreeNode * min_value_node(TreeNode * node)
+TreeNode * minValueNode(TreeNode * node)
 {
     TreeNode * current = node;
     
@@ -109,7 +111,7 @@ TreeNode * min_value_node(TreeNode * node)
     return current;
 }
 
-TreeNode * max_value_node(TreeNode * node)
+TreeNode * maxValueNode(TreeNode * node)
 {
     TreeNode * current = node;
     
@@ -120,7 +122,7 @@ TreeNode * max_value_node(TreeNode * node)
     return current;
 }
 
-TreeNode * delete_node(TreeNode * t, int data)
+TreeNode * deleteNode(TreeNode * t, int data)
 {
     if (t == NULL) 
     {
@@ -145,18 +147,18 @@ TreeNode * delete_node(TreeNode * t, int data)
         else // 자식 노드가 두 개인 경우
         {
             // 왼쪽 자식 노드 중 가장 큰 값을 가진 노드를 찾는다.
-            temp = max_value_node(t->left);
+            temp = maxValueNode(t->left);
             t->data = temp->data;
-            t->left = delete_node(t->left, temp->data);
+            t->left = deleteNode(t->left, temp->data);
         }
     }
     else if (t->data > data)
     {
-        t->left = delete_node(t->left, data);
+        t->left = deleteNode(t->left, data);
     }
     else
     {
-        t->right = delete_node(t->right, data);
+        t->right = deleteNode(t->right, data);
     }
 
     return t;

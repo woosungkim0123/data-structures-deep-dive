@@ -2,25 +2,25 @@
 
 #define ARRAY_SIZE 10
 
-int binary_search(int arr[], int start, int end, int search_value);
-
+int binarySearch(int arr[], int start, int end, int search_value);
 
 /**
  * 재귀를 이용한 이진 탐색
 */
-
 int main()
 {
     int arr[ARRAY_SIZE] = {1, 2, 3, 4, 5, 6, 7, 8 , 9, 10};
     int index;
     int search_value = 7;
 
-    index = binary_search(arr, 0, ARRAY_SIZE - 1, search_value);
+    index = binarySearch(arr, 0, ARRAY_SIZE - 1, search_value);
     
-    if (index == -1) {
+    if (index == -1) 
+    {
         printf("Not found.\n");
     }
-    else {
+    else 
+    {
         printf("Found. index is %d\n", index);
     }
 
@@ -28,7 +28,7 @@ int main()
     return 0;
 }
 
-int binary_search(int *arr, int start, int end, int target)
+int binarySearch(int *arr, int start, int end, int target)
 {
     if(start > end) 
     {
@@ -44,10 +44,10 @@ int binary_search(int *arr, int start, int end, int target)
 
     if(arr[mid] > target) 
     {
-        return binary_search(arr, start, mid - 1, target);
+        return binarySearch(arr, start, mid - 1, target);
     }
     else 
     {
-        return binary_search(arr, mid + 1, end, target);
+        return binarySearch(arr, mid + 1, end, target);
     }
 }
