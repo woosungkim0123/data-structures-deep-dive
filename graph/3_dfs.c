@@ -19,6 +19,9 @@ void addUnDirectedEdge(Graph *pGraph, int src, int dst, int cost);
 void printGraph(Graph *pGraph);
 void dfsStack(Graph *pGraph, int startVertex);
 
+/**
+ * 인접 리스트를 이용한 dfs 구현
+*/
 int main()
 {
     Graph graph;

@@ -20,6 +20,9 @@ void printGraph(Graph *pGraph);
 void bfs(Graph *pGraph, int startVertex);
 void freeGraph(Graph *pGraph);
 
+/**
+ * 인접 리스트를 이용한 bfs 구현
+*/
 int main() 
 {
     Graph graph;
