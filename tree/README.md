@@ -43,7 +43,7 @@
 
 map, set을 구성하는 레드 블랙 트리는 균형 이진 트리 중 하나입니다.
 
-![균형 이진 트리](image.png)
+![균형 이진 트리](image/balanced_binary_tree.png)
 
 ## 이진 트리 순회 방법
 
